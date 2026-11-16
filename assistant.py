@@ -6,10 +6,8 @@ from google import genai
 
 app = Flask(__name__)
 
-# API Key (କ୍ଲାଉଡ୍ ଏବଂ ଲାପଟପ୍ ଦୁଇଟିଯାକରେ କାମ କରିବ)
-API_KEY = os.environ.get(
-    "GEMINI_API_KEY", "AQ.Ab8RN6KlrrBbwT_cyqkZJEeB2vHe6JoQRY3sbz193z8nJiyJew"
-)
+# API Key ସିଧାସଳଖ Render Environment ରୁ ନେବ
+API_KEY = os.environ.get("GEMINI_API_KEY")
 client = genai.Client(api_key=API_KEY)
 
 # 1. ଏଠାରେ ତୁମର ଜରୁରୀ କଣ୍ଟାକ୍ଟ ନମ୍ବର ସେଭ୍ କର
@@ -207,7 +205,7 @@ def ask():
         }}
         """
         response = client.models.generate_content(
-            model="gemini-3.5-flash-lite", contents=prompt
+            model="gemini-2.5-flash", contents=prompt
         )
         raw_text = re.sub(
             r"^```json\s*|\s*```$", "", response.text.strip()
@@ -216,7 +214,7 @@ def ask():
         return jsonify(result)
     except Exception as e:
         return jsonify({
-            "answer": "क्षमा करें, कुछ समस्या आई है।",
+            "answer": f"Error: {str(e)}",
             "action": "none",
             "target": "",
             "message": "",
